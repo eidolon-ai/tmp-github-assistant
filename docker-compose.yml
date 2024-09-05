@@ -15,7 +15,9 @@ services:
       - .env
     volumes:
       - ./resources:/bound_resources
-    command: /bound_resources/ -m local_dev --reload --fail-on-bad-agent true
+    command: /bound_resources/ -m github-assistant --reload --fail-on-bad-agent true
+    depends_on:
+      - mongo
 
   webui:
     image: eidolonai/webui:latest
@@ -29,3 +31,15 @@ services:
       - "3000:3000"
     depends_on:
       - agent-server
+
+  mongo:
+    image: mongo
+    command:
+      - --dbpath
+      - /data/db
+      - --logpath
+      - /dev/null
+    volumes:
+      - ./dev-data/mongo:/data/db
+    ports:
+        - "27017:27017"
