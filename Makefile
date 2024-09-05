@@ -1,6 +1,6 @@
 DOCKER_REPO_NAME := my-eidolon-project
 VERSION := $(shell grep -m 1 '^version = ' pyproject.toml | awk -F '"' '{print $$2}')
-SDK_VERSION := $(shell grep -m 1 '^eidolon-ai-sdk = ' pyproject.toml | awk -F '[="^]' '{print $$4}')
+SDK_VERSION := $(shell awk '/^name = "eidolon-ai-sdk"$$/{f=1} f&&/^version = /{gsub(/"|,/,"",$$3); print $$3; exit}' poetry.lock)
 REQUIRED_ENVS := OPENAI_API_KEY
 
 .PHONY: serve serve-dev check docker-serve .env sync update docker-build k8s-operator check-kubectl check-helm check-cluster-running verify-k8s-permissions check-install-operator k8s-serve k8s-env
@@ -14,6 +14,9 @@ serve-dev: .make/poetry_install .env
 serve: .make/poetry_install .env
 	@echo "Starting Server..."
 	@poetry run eidolon-server resources --dotenv .env $(ARGS)
+
+test: .make/poetry_install .env
+	@poetry run pytest tests $(ARGS)
 
 .env: Makefile
 	@touch .env
@@ -48,15 +51,15 @@ poetry.lock: pyproject.toml
 	@poetry lock --no-update
 	@touch poetry.lock
 
-Dockerfile: pyproject.toml
-	@sed -i '' 's/^ARG EIDOLON_VERSION=.*/ARG EIDOLON_VERSION=${SDK_VERSION}/' Dockerfile
+Dockerfile: pyproject.toml .make
+	@sed -e 's/^ARG EIDOLON_VERSION=.*/ARG EIDOLON_VERSION=${SDK_VERSION}/' Dockerfile > Dockerfile.tmp && mv Dockerfile.tmp Dockerfile
 	@echo "Updated Dockerfile with EIDOLON_VERSION=${SDK_VERSION}"
 
 check-docker-daemon:
 	@docker info >/dev/null 2>&1 || (echo "🚨 Error: Docker daemon is not running\n🛟 For help installing or running docker, visit https://docs.docker.com/get-docker/" >&2 && exit 1)
 
-docker-serve: .env check-docker-daemon poetry.lock
-	@docker-compose up
+docker-serve: .env check-docker-daemon poetry.lock Dockerfile
+	docker compose up $(ARGS)
 
 update:
 	poetry add eidolon-ai-sdk@latest
@@ -90,7 +93,7 @@ check-cluster-running:
 
 # Verify K8s permissions
 verify-k8s-permissions:
-	@./verify_k8s -q || (echo "K8s permission verification failed. Please check your permissions and try again." && exit 1)
+	@./k8s/verify_k8s -q || (echo "K8s permission verification failed. Please check your permissions and try again." && exit 1)
 
 # Check if Eidolon operator is installed, install if not
 check-install-operator:
