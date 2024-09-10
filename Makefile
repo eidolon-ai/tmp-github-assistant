@@ -1,4 +1,4 @@
-DOCKER_REPO_NAME := my-eidolon-project
+DOCKER_REPO_NAME := github-assistant-agent-server
 VERSION := $(shell grep -m 1 '^version = ' pyproject.toml | awk -F '"' '{print $$2}')
 SDK_VERSION := $(shell awk '/^name = "eidolon-ai-sdk"$$/{f=1} f&&/^version = /{gsub(/"|,/,"",$$3); print $$3; exit}' poetry.lock)
 REQUIRED_ENVS := OPENAI_API_KEY
