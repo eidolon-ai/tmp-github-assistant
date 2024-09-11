@@ -1,0 +1,25 @@
+apiVersion: server.eidolonai.com/v1alpha1
+kind: Machine
+metadata:
+  # Name of the machine. This must be unique within the namespace and be a valid DNS subdomain.
+  name: github-assistant
+
+spec:
+  ### The following fields are k8s only ###
+  image: eidolon-github-assistant:latest # The image to use for the machine. Set this for production or cloud based environments
+  imagePullPolicy: Never # WARNING: Change this for production or cloud based environments
+  # The environment variables to set in the machine. In this case, we are using a secret to set the environment variables named `eidolon`.
+  # These secrets are set up by the makefile
+  envFrom:
+    - secretRef:
+        name: eidolon
+  ### </k8s only> ###
+
+  # We are persisting to a mongo database
+  symbolic_memory:
+    implementation: MongoSymbolicMemory
+    mongo_database_name: "eidolon-github-assistant"
+    mongo_connection_string: "mongodb://mongo:27017/?directConnection=true"
+  file_memory:
+    implementation: components.async_file_memory.AsyncLocalFileMemory
+    root_dir: "/data/eidolon/files"

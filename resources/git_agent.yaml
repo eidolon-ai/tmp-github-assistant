@@ -1,0 +1,20 @@
+apiVersion: server.eidolonai.com/v1alpha1
+kind: Agent
+metadata:
+  name: git_agent
+
+spec:
+  apu:
+    implementation: claude_apu
+    logic_units:
+        - implementation: components.git_command_logic_unit.GitCommandLogicUnit
+          owner: "eidolon-ai"
+          repo: "eidolon"
+
+  system_prompt:
+    Your job is to provide information about the Eidolon git repository. You can checkout a branch and get the contents of a file.
+  actions:
+    - name: "git"
+      description: "This agent is an expert on using git. It can provide information about the repository, checkout a branch, do various file operations. Use this agent to interact with the git repository or files in the repository."
+      allow_file_upload: false
+

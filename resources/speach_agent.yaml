@@ -1,0 +1,6 @@
+apiVersion: server.eidolonai.com/v1alpha1
+kind: Agent
+metadata:
+  name: speech_agent
+spec:
+  implementation: AutonomousSpeechAgent

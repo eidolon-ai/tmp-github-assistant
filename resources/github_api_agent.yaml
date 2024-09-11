@@ -1,0 +1,59 @@
+apiVersion: server.eidolonai.com/v1alpha1
+kind: Agent
+metadata:
+  name: github_agent
+
+spec:
+  apu:
+    implementation: claude_apu
+    logic_units:
+      - implementation: ApiLogicUnit
+        title: "Github API"
+        root_call_url: "https://api.github.com"
+        open_api_location: "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json"
+        extra_header_params:
+          Authorization: "Bearer {{GITHUB_TOKEN}}"
+          X-GitHub-Api-Version: "2022-11-28"
+        operations_to_expose:
+          - name: list_repo_collaborators
+            description: For organization-owned repositories, the list of collaborators includes outside collaborators, organization members that are direct collaborators, organization members with access through team memberships, organization members with access through default organization permissions, and organization owners. Organization members with write, maintain, or admin privileges on the organization-owned repository can use this endpoint.
+            path: "/repos/{owner}/{repo}/collaborators"
+            method: "get"
+          - name: "list_rep_issues"
+            description: "Provides information about the issues in the repository"
+            path: "/repos/{owner}/{repo}/issues"
+            method: "get"
+          - name: "get_repo_issue"
+            description: "Provides information about an issue in the repository"
+            path: "/repos/{owner}/{repo}/issue/{issue_number}"
+            method: "get"
+          - name: "list_pull_requests"
+            description: "list pull requests in the repository"
+            path: "/repos/{owner}/{repo}/pulls"
+            method: "get"
+          - name: "get_pull_request"
+            description: "Get a pull request in the repository"
+            path: "/repos/{owner}/{repo}/pulls/{pull_number}"
+            method: "get"
+          - name: "list_commits_pr"
+            description: Lists a maximum of 250 commits for a pull request. To receive a complete commit list for pull requests with more than 250 commits, use the List commits endpoint.
+            path: "/repos/{owner}/{repo}/pulls/{pull_number}/commits"
+            method: "get"
+          - name: check_pr_merged
+            description: Checks if a pull request has been merged into the base branch. The HTTP status of the response indicates whether or not the pull request has been merged; the response body is empty.
+            path: "/repos/{owner}/{repo}/pulls/{pull_number}/merge"
+            method: "get"
+          - name: get_user
+            description: Provides publicly available information about someone with a GitHub account. Use this to map a user's GitHub ID to their username.
+            path: "/users/{username}"
+            method: "get"
+
+  system_prompt:
+    Your job is to provide information about the Eidolon git repository in GitHub. You can list the issues, pull requests, commits, and check if a pull request has been merged.
+    You will be working with the repository in GitHub from the user 'eidolon-ai', and the repo 'eidolon'.
+    This API provides paginated results. There are defaults on the number of items per page so you should always specify the page number and the number of items per page, if applicable.
+    You may be asked to provide information about a user. You should check for collaborators for the user. After checking the collaborator list and still are not sure, you should ask the user for more information.
+  actions:
+    - name: "github_action"
+      description: "This agent is an expert on using github. It can provide information about the repository, list the issues, pull requests, commits, and check if a pull request has been merged. Use this agent to interact with the git repository in GitHub."
+      allow_file_upload: false
