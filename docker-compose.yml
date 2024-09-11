@@ -1,6 +1,6 @@
 services:
   agent-server:
-    image: my-eidolon-project:latest
+    image: github-assistant-agent-server:latest
     build:
       context: .
       dockerfile: Dockerfile
