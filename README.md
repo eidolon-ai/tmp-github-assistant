@@ -12,7 +12,7 @@ This project serves as a template for individuals interested in building agents 
 First you need to clone the project and navigate to the project directory:
 
 ```bash
-git clone https://github.com/eidolon-ai/git-assistant.git
+git clone https://github.com/eidolon-ai/github-assistant.git
 cd agent-machine
 ```
 
@@ -54,8 +54,8 @@ To use kubernetes for local development, you will need to have the following ins
 Clone the project and navigate to the project directory:
 
 ```bash
-git clone https://github.com/eidolon-ai/git-assistant.git
-cd git-assistant
+git clone https://github.com/eidolon-ai/github-assistant.git
+cd github-assistant
 ```
 
 ### Installation
