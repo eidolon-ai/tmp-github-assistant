@@ -14,5 +14,5 @@ jobs:
         with:
           # You can target a project in a different organization
           # to the issue
-          project-url: https://github.com/orgs/<orgName>/projects/<projectNumber>
+          project-url: https://github.com/orgs/eidolon-ai/projects/6
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
