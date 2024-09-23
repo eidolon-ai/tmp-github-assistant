@@ -1,5 +1,10 @@
-ARG EIDOLON_VERSION=0.1.125
+ARG EIDOLON_VERSION=0.1.132
+FROM docker.io/eidolonai/sdk_base:$EIDOLON_VERSION as agent-machine-base-git
+
+RUN apt-get update && apt-get install -y git
+
 FROM python:3.11-slim as builder
+
 RUN pip install poetry
 RUN poetry config virtualenvs.create false --local
 COPY pyproject.toml pyproject.toml
@@ -11,8 +16,7 @@ RUN touch dist/requirements.txt
 RUN poetry export --without-hashes --format=requirements.txt > dist/requirements.txt
 RUN poetry build
 
-FROM docker.io/eidolonai/sdk_base:$EIDOLON_VERSION as agent-machine-base
-RUN apt-get update && apt-get install -y git
+FROM agent-machine-base-git as agent-machine-base
 
 # First copy builder requirements so dependency cache layer is cached
 COPY --from=builder dist/requirements.txt /tmp/agent-machine/requirements.txt

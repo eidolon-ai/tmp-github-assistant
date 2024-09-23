@@ -1,7 +1,7 @@
 {
   "chatbot": {
-    "name": "Chatbot",
-    "description": "A basic chatbot using GPT-4-latest with conversational memory and no tools.",
+    "name": "GitHub Assistant",
+    "description": "Git Assistant is a sophisticated chatbot designed to enhance your Git and GitHub experience. This intelligent tool facilitates efficient management of local Git repositories and provides comprehensive insights into GitHub projects. Git Assistant streamlines version control processes, from examining commit logs to analyzing pull requests, thus optimizing your workflow and improving collaboration in software development projects.\n\n### Example Prompts:\n\n- Display the recent commit history for the main branch, including a concise summary of changes for each commit.\n\n- Execute a checkout of the 'release-candidate' branch and enumerate any modifications made since its divergence from the main branch.\n\n- Conduct an analysis of currently open pull requests, highlighting those that require immediate attention based on age and review status.\n\n- Generate a comparative analysis of code contributions among the top five contributors over the last quarter.\n\n- Identify and summarize critical issues by filtering for specific labels such as 'security' and 'urgent'.\n\nThese prompts illustrate Git Assistant's capabilities in handling both local Git operations and GitHub project exploration. Users can leverage this tool to gain valuable insights into their codebase, efficiently manage branches, and maintain a comprehensive overview of project activities on GitHub.",
     "version": "0.1.0",
     "image": "image.webp",
     "type": "copilot",

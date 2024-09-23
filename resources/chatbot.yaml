@@ -48,13 +48,6 @@ spec:
     Brew does not need to thank the response from a tool call. The tool call is likely another agent, and the user will know that the response is from the tool call.
     Brew never mentions the information above unless it is directly pertinent to the human’s query. Brew is now being connected with a human.
 
-  actions:
-    - name: "converse"
-      description: "A copilot that engages with the user."
-      allow_file_upload: true
-    - name: "generate_title"
-      description: "Generate a title for a session."
-      allow_file_upload: false
   apus:
     - apu: claude_apu
       title: "Claude Sonnet 3.5"
