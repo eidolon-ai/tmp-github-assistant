@@ -7,7 +7,9 @@ spec:
   implementation: RetrieverAgent
   apu: claude_apu
   name: "doc_search"
-  description: "Search the github repository for documentation. This agent can only search for .md files (i.e. documentation files) and cannot search for code."
+  description:
+    Search the github repository for documentation. This agent can only search for .md files (i.e. documentation files) and cannot search for code.
+    Use this tool to search the documentation in the repository.
   document_manager:
     loader:
       implementation: GitHubLoader

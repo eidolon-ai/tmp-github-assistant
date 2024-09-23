@@ -7,7 +7,10 @@ spec:
   implementation: RetrieverAgent
   apu: claude_apu
   name: "code_search"
-  description: "Search the github repository for code. This agent can only search for .python, .js, .jsx, .ts, and .tsx files (i.e. code files) and cannot search for document that is not in the code."
+  description:
+    Search the github repository for code. This agent can only search for .python, .js, .jsx, .ts, and .tsx files 
+    (i.e. code files) and cannot search for document that is not in the code.
+    Use this tool to search for code or architecture in the repository.
   document_manager:
     loader:
       implementation: GitHubLoader
