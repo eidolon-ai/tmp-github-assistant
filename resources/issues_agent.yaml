@@ -1,0 +1,68 @@
+apiVersion: server.eidolonai.com/v1alpha1
+kind: Agent
+metadata:
+  name: issues_agent
+
+spec:
+  apu:
+    implementation: claude_apu
+    logic_units:
+      - implementation: ApiLogicUnit
+        title: "Github API"
+        root_call_url: "https://api.github.com"
+        open_api_location: "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json"
+        extra_header_params:
+          Authorization: "Bearer {{GITHUB_TOKEN}}"
+          X-GitHub-Api-Version: "2022-11-28"
+        operations_to_expose:
+          - name: "list_rep_issues"
+            description: "Provides information about the issues in the repository"
+            path: "/repos/{owner}/{repo}/issues"
+            method: "get"
+          - name: "get_repo_issue"
+            description: "Provides information about an issue in the repository"
+            path: "/repos/{owner}/{repo}/issue/{issue_number}"
+            method: "get"
+
+  system_prompt:
+    Your job is to provide information about a git repository in GitHub. You can use any of the tools at your disposal to answer the question.
+    This API provides paginated results. There are defaults on the number of items per page so you should always specify the page number and the number of items per page, if applicable.
+    You may be asked to provide information about a user by their human name. Correlate the human name to the GitHub username and provide the information requested. You may need to first get 
+    the user's GitHub username from a command other than get_user, then convert with get_user.
+  
+    You should always return the most relevant information to the user's query.
+    You should ONLY return the information that the user requests.
+    The response size is limited and many of the tools will return a large amount of data.
+    Limit the number of fields requested to only what is needed.
+    Limit the number of items returned to only what is needed.
+  actions:
+    - name: "action"
+      title: "Issues Agent"
+      description:
+        This agent is an expert on using github, specifically to retrieve information about github issues in the repository.
+        There may be better tools to diff code, get actions or workflow, get pull request, provide more detailed information about the repository available to you, or any other operation.
+      allow_file_upload: false
+      user_prompt:
+        You will be working with the repository in GitHub from the user '{{ owner }}', and the repo '{{ repo }}'.
+      input_schema:
+          owner:
+            type: string
+            description: "The owner of the repository"
+          repo:
+            type: string
+            description: "The repository name"
+          question:
+            type: string
+            description: "The question to ask the agent. Be specific and precise"
+      allowed_states:
+        - initialized
+        - http_error
+    - name: "converse"
+      title: "Follow in conversation"
+      description:
+        This agent is an expert on using github, specifically to retrieve information about github issues in the repository.
+        There may be better tools to diff code, get actions or workflow, get pull request, provide more detailed information about the repository available to you, or any other operation.
+        Use this tool to follow in the conversation with the user or parent agent.
+      allow_file_upload: false
+      allowed_states:
+        - idle

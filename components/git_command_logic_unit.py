@@ -70,7 +70,10 @@ class GitCommandLogicUnit(LogicUnit, Specable[GitCommandLogicUnitSpec]):
         if proc.returncode != 0:
             return False, "Error: " + stderr.decode() + '\n' + stdout.decode()
 
-        return True, stderr.decode() + '\n' + stdout.decode()
+        output = stderr.decode() + '\n' + stdout.decode()
+        if output and len(output) > 100000:
+            return True, "The command returned too much output to display. Please run a different comand."
+        return True, output
 
     async def _verify_git_repo(self, branch: str) -> Tuple[bool, str]:
         """
@@ -129,7 +132,7 @@ class GitCommandLogicUnit(LogicUnit, Specable[GitCommandLogicUnitSpec]):
         status, msg = await self._run_git_command(branch, ["log", *args])
         return msg
 
-    @llm_function(title="Get file")
+    @llm_function(title="Get file", sub_title="Get the contents of a file")
     async def get_file(self, branch: str, file: str) -> str:
         """
         Get the contents of a file
@@ -146,7 +149,7 @@ class GitCommandLogicUnit(LogicUnit, Specable[GitCommandLogicUnitSpec]):
             return f"File '{file}' not found"
         return file_path.read_text()
 
-    @llm_function(title="LS path")
+    @llm_function(title="LS path", sub_title="List the contents of a path")
     async def ls(self, branch: str, path: str) -> str:
         """
         Get the contents of a path

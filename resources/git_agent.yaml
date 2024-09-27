@@ -23,4 +23,14 @@ spec:
         When a command fails to execute it will return an error message. Use that error message to help you debug the command and how you tried to execute it.
         If the arguments are incorrect, the command will fail. Make sure you are providing the correct arguments.
       allow_file_upload: false
-
+      user_prompt:
+        You will be working with the branch {{ branch }}.
+        Answer the following question
+          {{ question }}
+      input_schema:
+          branch:
+            type: string
+            description: "The branch to checkout and run the commands against"
+          question:
+            type: string
+            description: "The question to ask the agent. Be specific and precise"
