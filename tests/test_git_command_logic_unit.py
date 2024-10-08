@@ -9,10 +9,10 @@ async def test_verify(tmp_path):
     impl = GitCommandLogicUnit(spec=spec)
     assert not Path(path, "main", spec.repo, ".git", "HEAD").exists()
     status, msg = await impl._verify_git_repo("main")
-    assert status is True
+    assert status
 
     status, msg = await impl._verify_git_repo('dlb/leave_here_for_test')
-    assert status is True
+    assert status
 
 
 async def test_pull_pulls_first_time(tmp_path):
