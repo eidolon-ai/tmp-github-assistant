@@ -65,6 +65,7 @@ spec:
       You can filter by the branch when looking up workflow runs.
       
     Workflow Jobs:
+      Jobs have unique ids and are associated with a workflow run.
       Jobs are a set of steps that execute on the same runner (virtual machine).
       A workflow can have multiple jobs that run in parallel by default.
       Each job can have its own environment, dependencies, and steps.
