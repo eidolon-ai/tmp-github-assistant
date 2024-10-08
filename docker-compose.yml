@@ -16,7 +16,7 @@ services:
       - .env
     volumes:
       - ./resources:/bound_resources
-      - eidolon_data:/data/eidolon
+      - eidolon_data:/data/eidolon/files
     command: /bound_resources/ -m github-assistant --reload --fail-on-bad-agent true
     depends_on:
       - mongo
