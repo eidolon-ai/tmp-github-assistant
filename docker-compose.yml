@@ -42,6 +42,7 @@ services:
       - --logpath
       - /dev/null
     volumes:
-      - ./dev-data/mongo:/data/db
-    ports:
-        - "27017:27017"
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
