@@ -59,9 +59,9 @@ check-docker-daemon:
 	@docker info >/dev/null 2>&1 || (echo "🚨 Error: Docker daemon is not running\n🛟 For help installing or running docker, visit https://docs.docker.com/get-docker/" >&2 && exit 1)
 
 docker-serve: .env check-docker-daemon poetry.lock Dockerfile docker-compose.yml
-	$(MAKE) -j2 _docker-serve ARGS=$(ARGS)
+	$(MAKE) -j3 _docker-serve ARGS=$(ARGS)
 
-_docker-serve: docker-build pull-webui
+_docker-serve: docker-build pull-webui pull-mongo
 	docker compose up $(ARGS)
 
 docker-compose.yml:
@@ -150,4 +150,9 @@ docker-build: poetry.lock Dockerfile
 pull-webui:
 	@if ! docker image inspect eidolonai/webui:latest > /dev/null 2>&1; then \
 		docker pull eidolonai/webui:latest; \
+	fi
+
+pull-mongo:
+	@if ! docker image inspect mongo:latest > /dev/null 2>&1; then \
+		docker pull mongo:latest; \
 	fi
