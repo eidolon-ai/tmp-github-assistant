@@ -52,3 +52,4 @@ spec:
     - apu: claude_apu
       title: "Claude Sonnet 3.5"
       default: True
+  title_generation_mode: auto
